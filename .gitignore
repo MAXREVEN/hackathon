@@ -1,8 +1,10 @@
-*.o
-*.obj
-*.out
-a.out
-*.dSYM/
-*.dSYM
-build/
-bin/
+# Environment variables & secrets
+.env
+.env.*
+*.pem
+*.key
+secrets.json
+credentials.json
+# n8n local database / encryption keys (if self-hosting inside this folder)
+.n8n/
+database.sqlite
