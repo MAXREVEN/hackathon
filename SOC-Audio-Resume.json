@@ -4,7 +4,7 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "=i-am-lost",
+        "path": "****",
         "options": {
           "binaryPropertyName": "   audio"
         }
@@ -17,7 +17,7 @@
       ],
       "id": "ae9d315e-2142-431f-8cc3-00bdecf6ac6d",
       "name": "Webhook",
-      "webhookId": "795006d8-ed64-48c2-8eea-82c27ad3b083"
+      "webhookId": "****"
     },
     {
       "parameters": {
@@ -62,7 +62,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://100.95.192.82:11434/api/generate",
+        "url": "http://****:11434/api/generate",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\n  \"model\": \"llama3.2\",\n  \"prompt\": \"Tu es un expert pédagogique et un éditeur de texte professionnel. Voici une transcription brute d'un cours, qui peut contenir des erreurs de reconnaissance vocale, des fautes de ponctuation et des hésitations :\\n\\n{{ JSON.stringify($json.data).slice(1, -1) }}\\n\\nTa mission en deux étapes :\\n1. CORRIGE le texte : réécris-le proprement avec une ponctuation correcte, une grammaire parfaite, en supprimant les tics de langage, mais sans changer le sens ni omettre d'informations techniques.\\n2. GÉNÈRE un résumé structuré à partir de ce texte corrigé.\\n\\nRéponds UNIQUEMENT avec un objet JSON valide (pas de balises markdown, pas de ```json, juste l'objet brut) contenant ces 4 clés exactes :\\n{\\n  \\\"corrected_text\\\": \\\"Le texte complet corrigé, propre et lisible\\\",\\n  \\\"paragraph\\\": \\\"Explication simple et claire en 3-4 phrases du contenu du cours\\\",\\n  \\\"roadmap\\\": \\\"Liste à puces des idées principales (utilise - pour chaque puce)\\\",\\n  \\\"spidergram\\\": \\\"Code Mermaid.js pour une carte mentale (commence par graph TD et utilise des flèches -->)\\\"\\n}\",\n  \"stream\": false,\n  \"format\": \"json\"\n}",
@@ -82,7 +82,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://ntfy.sh/resume-ahmed-7k29x",
+        "url": "[https://ntfy.sh/](https://ntfy.sh/)****",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -152,7 +152,7 @@
   "versionId": "d1c3d894-27a5-4fff-bcdf-450a1e0d0c2a",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "b4fbdeef4ffd1a63f40722da9174c0ea79250bb66ee00df612393676555319a5"
+    "instanceId": "****"
   },
   "nodeGroups": [],
   "id": "zYwFY6BovG9UG2i6",
