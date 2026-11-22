@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Instant Replay - Tab Recorder",
+  "version": "0.1.0",
+  "description": "Capture a Chrome tab and save recent footage without stopping the recording.",
+  "minimum_chrome_version": "116",
+  "permissions": ["tabCapture", "offscreen", "downloads", "storage", "activeTab"],
+  "action": {"default_popup": "popup.html", "default_title": "Instant Replay"},
+  "background": {"service_worker": "background.js"},
+  "commands": {"save-replay": {"suggested_key": {"default": "Alt+Shift+S"}, "description": "Save recent replay"}}
+}
