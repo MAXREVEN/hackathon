@@ -90,6 +90,16 @@ def test_lost_with_audio_but_no_ai_key_is_an_error_not_fake_data(user):
     assert r.status_code == 502
 
 
+def test_lost_with_text_is_saved_as_real_content(user):
+    r = user.post("/api/lost", data={"text": "  Today we saw photosynthesis.  ", "title": "Biology"})
+    assert r.status_code == 200
+    item = r.json()
+    assert item["s"] is False and item["t"] == "Biology" and item["f"] == "paragraph"
+    assert item["c"]["p"] == "Today we saw photosynthesis."
+    assert len(user.get("/api/bootstrap").json()["hist"]) == 1
+    assert user.post("/api/lost", data={"text": "x" * 20001}).status_code == 413
+
+
 def test_cross_origin_write_blocked(user):
     r = user.put("/api/goals", json=[], headers={"Origin": "https://evil.example"})
     assert r.status_code == 403

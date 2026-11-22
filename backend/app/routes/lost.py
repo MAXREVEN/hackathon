@@ -15,21 +15,36 @@ from ..models import Summary, User, now_ms
 router = APIRouter(prefix="/api", tags=["lost"])
 FORMATS = {"paragraph", "roadmap", "spider"}
 KEEP = 30   # keep the 30 newest summaries per student (same as the front used to)
+MAX_TEXT_CHARS = 20000   # longest message we accept from the page (the ntfy text)
 
 
 @router.post("/lost")
 async def i_am_lost(
     format: str = Form("paragraph"),
+    text: Optional[str] = Form(None),
+    title: Optional[str] = Form(None),
     audio: Optional[UploadFile] = File(None),
     user: User = Depends(current_user),
     db: Session = Depends(get_db),
 ):
-    """The big button. Without audio -> sample content (flagged). With audio -> Gemini (untested)."""
+    """The big button.
+
+    - text  -> the latest ntfy message fetched by the page; saved as real content (not a sample).
+    - audio -> Gemini (untested).
+    - neither -> sample content (flagged).
+    """
     if format not in FORMATS:
         raise HTTPException(422, "format must be paragraph, roadmap or spider")
 
+    text = (text or "").strip()
     is_sample = True
-    if audio is not None and audio.filename:
+    if text:
+        if len(text) > MAX_TEXT_CHARS:
+            raise HTTPException(413, "The message is too long")
+        content = {"t": (title or "").strip()[:200] or "Latest message", "p": text,
+                   "steps": [], "root": "", "nodes": []}
+        is_sample = False
+    elif audio is not None and audio.filename:
         data = await audio.read(MAX_AUDIO_BYTES + 1)
         if len(data) > MAX_AUDIO_BYTES:
             raise HTTPException(413, "Audio is too large")
