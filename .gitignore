@@ -1,0 +1,8 @@
+*.o
+*.obj
+*.out
+a.out
+*.dSYM/
+*.dSYM
+build/
+bin/
