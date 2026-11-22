@@ -1,0 +1,160 @@
+{
+  "name": "SOC-Audio-Resume",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "=i-am-lost",
+        "options": {
+          "binaryPropertyName": "   audio"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        -1696,
+        -736
+      ],
+      "id": "ae9d315e-2142-431f-8cc3-00bdecf6ac6d",
+      "name": "Webhook",
+      "webhookId": "795006d8-ed64-48c2-8eea-82c27ad3b083"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:9000/asr",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "audio_file",
+              "inputDataFieldName": "={{ Object.keys($binary)[0] }}"
+            },
+            {
+              "name": "language",
+              "value": "fr"
+            },
+            {
+              "name": "task",
+              "value": "transcribe"
+            },
+            {
+              "name": "output",
+              "value": "text"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -1408,
+        -736
+      ],
+      "id": "cbe5dcea-c7d6-439b-b516-eef6b2984da0",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://100.95.192.82:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama3.2\",\n  \"prompt\": \"Tu es un expert pédagogique et un éditeur de texte professionnel. Voici une transcription brute d'un cours, qui peut contenir des erreurs de reconnaissance vocale, des fautes de ponctuation et des hésitations :\\n\\n{{ JSON.stringify($json.data).slice(1, -1) }}\\n\\nTa mission en deux étapes :\\n1. CORRIGE le texte : réécris-le proprement avec une ponctuation correcte, une grammaire parfaite, en supprimant les tics de langage, mais sans changer le sens ni omettre d'informations techniques.\\n2. GÉNÈRE un résumé structuré à partir de ce texte corrigé.\\n\\nRéponds UNIQUEMENT avec un objet JSON valide (pas de balises markdown, pas de ```json, juste l'objet brut) contenant ces 4 clés exactes :\\n{\\n  \\\"corrected_text\\\": \\\"Le texte complet corrigé, propre et lisible\\\",\\n  \\\"paragraph\\\": \\\"Explication simple et claire en 3-4 phrases du contenu du cours\\\",\\n  \\\"roadmap\\\": \\\"Liste à puces des idées principales (utilise - pour chaque puce)\\\",\\n  \\\"spidergram\\\": \\\"Code Mermaid.js pour une carte mentale (commence par graph TD et utilise des flèches -->)\\\"\\n}\",\n  \"stream\": false,\n  \"format\": \"json\"\n}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -1184,
+        -736
+      ],
+      "id": "21d5572e-85b1-40fd-95b0-473b2dbe6c5e",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ntfy.sh/resume-ahmed-7k29x",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Title",
+              "value": "Resume du cours"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "text/plain",
+        "body": "={{ (() => { try { return JSON.parse($json.response).paragraph; } catch (e) { return $json.response; } })() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -944,
+        -736
+      ],
+      "id": "18f89931-f9f7-44df-ae0c-55e6df6c5d7a",
+      "name": "HTTP Request2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d1c3d894-27a5-4fff-bcdf-450a1e0d0c2a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b4fbdeef4ffd1a63f40722da9174c0ea79250bb66ee00df612393676555319a5"
+  },
+  "nodeGroups": [],
+  "id": "zYwFY6BovG9UG2i6",
+  "tags": []
+}
